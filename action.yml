@@ -1,20 +1,38 @@
+###############################################################################
+# 0xTheProDev/gitlab-mirror : Mirror GitHub Repository into GitLab Workspace  #
+# Copyright (C) 2024 Progyan Bhattacharya <bprogyan@gmail.com>                #
+#                                                                             #
+# This program is free software; you can redistribute it and/or modify        #
+# it under the terms of the GNU General Public License as published by        #
+# the Free Software Foundation; either version 2 of the License, or           #
+# (at your option) any later version.                                         #
+#                                                                             #
+# This program is distributed in the hope that it will be useful,             #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of              #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               #
+# GNU General Public License for more details.                                #
+#                                                                             #
+# You should have received a copy of the GNU General Public License along     #
+# with this program; if not, write to the Free Software Foundation, Inc.,     #
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                 #
+###############################################################################
 ---
 name: "GitLab Mirror Action"
 description: "Mirror Commit History of GitHub Repository into GitLab Workspace."
 author: "Progyan Bhattacharya <bprogyan@gmail.com>"
 
 inputs:
-  followTags:
+  follow-tags:
     description: "Enable this boolean flag to push Tags alongside."
     required: false
     default: "false"
 
-  forcePush:
+  force-push:
     description: "Enable this boolean flag to overwrite Git history."
     required: false
     default: "false"
 
-  hostName:
+  hostname:
     description: "Provide hostname for self-hosted GitLab instance."
     required: false
     default: "gitlab.com"
@@ -23,11 +41,11 @@ inputs:
     description: "Password or Access Token for GitLab User."
     required: true
 
-  projectId:
+  project-id:
     description: "Project Id for the target Repository."
     required: true
 
-  userName:
+  username:
     description: "Username for GitLab User."
     required: true
 
@@ -37,13 +55,13 @@ runs:
     - name: Mirror Repository
       shell: bash
       env:
-        FOLLOW_TAGS: "${{ inputs.followTags }}"
-        FORCE_PUSH: "${{ inputs.forcePush }}"
+        FOLLOW_TAGS: "${{ inputs.follow-tags }}"
+        FORCE_PUSH: "${{ inputs.force-push }}"
         GITHUB_ACTION_PATH: ${{ github.action_path }}
-        GITLAB_HOSTNAME: ${{ inputs.hostName }}
+        GITLAB_HOSTNAME: ${{ inputs.hostname }}
         GITLAB_PASSWORD: ${{ inputs.password }}
-        GITLAB_PROJECT_ID: ${{ inputs.projectId }}
-        GITLAB_USERNAME: ${{ inputs.userName }}
+        GITLAB_PROJECT_ID: ${{ inputs.project-id }}
+        GITLAB_USERNAME: ${{ inputs.username }}
       run: |-
         url="https://$GITLAB_HOSTNAME/$GITLAB_USERNAME/$GITLAB_PROJECT_ID.git"
         branch=$(git symbolic-ref --short HEAD)
@@ -67,7 +85,6 @@ runs:
           git push --tags mirror
         fi
 
-# Ref: https://haya14busa.github.io/github-action-brandings/
 branding:
   icon: "git-pull-request"
   color: "blue"
